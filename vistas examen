@@ -1,0 +1,5 @@
+create view unitarioembarque as select idempresa, idalmacen, idembarque, cantidad, precioTotal/cantidad as unitarioembarque from embarque
+  
+create view totalmacenes as  select idempresa, idalmacen, sum(cantidad)as totalmacen from embarque group by idalmacen, idempresa
+  
+ create view pesoembarque as  select unitarioembarque.idempresa, unitarioembarque.idalmacen, idembarque, cantidad/totalmacen as pesoembarque from unitarioembarque, totalmacenes where unitarioembarque.idempresa=totalmacenes.idempresa and unitarioembarque.idalmacen=totalmacenes.idalmacen
