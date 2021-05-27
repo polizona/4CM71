@@ -3,3 +3,13 @@ create view unitarioembarque as select idempresa, idalmacen, idembarque, cantida
 create view totalmacenes as  select idempresa, idalmacen, sum(cantidad)as totalmacen from embarque group by idalmacen, idempresa
   
  create view pesoembarque as  select unitarioembarque.idempresa, unitarioembarque.idalmacen, idembarque, cantidad/totalmacen as pesoembarque from unitarioembarque, totalmacenes where unitarioembarque.idempresa=totalmacenes.idempresa and unitarioembarque.idalmacen=totalmacenes.idalmacen
+  create view ponderadoembarque as select pesoembarque.idempresa,pesoembarque.idalmacen,pesoembarque.idembarque, pesoembarque*unitarioembarque as ponderadoembarque from pesoembarque, unitarioembarque where pesoembarque.idempresa=unitarioembarque.idempresa and pesoembarque.idalmacen=unitarioembarque.idalmacen and pesoembarque.idembarque=unitarioembarque.idembarque order by pesoembarque.idempresa,pesoembarque.idalmacen,pesoembarque.idembarque
+  
+ create view ponderadoalmacen as select idempresa, idalmacen, sum(ponderadoembarque) as ponderadoalmacen from ponderadoembarque group by idempresa, idalmacen
+  
+create view coeficiente as
+    select idempresa, idindustria, idvendedora, coeficiente
+    from empresa
+    join encadenamiento on idindustria=idcompradora
+    order by idempresa, idvendedora
+
